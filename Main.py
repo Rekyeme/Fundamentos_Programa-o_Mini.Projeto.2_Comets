@@ -16,17 +16,33 @@ BLUE = (0, 0, 255)
 # Controls how fast the game will run;
 FPS = 60
 
-# Spaceship sprites import
-Spaceship_RED_PNG = pygame.image.load(os.path.join("Assets", "SpaceShipRed_Comets.png"))
+# Spaceship sprite
+SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 50, 50
+VELOCITY = 5
+SPACESHIP_RED_PNG = pygame.image.load(os.path.join("Assets", "SpaceShipRed_Comets.png"))
+SPACESHIP_RED_PNG = pygame.transform.scale(SPACESHIP_RED_PNG, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
 
 # Draws objects on the display;
-def window_draw():
+def window_draw(red):
     DISPALYSURF.fill(WHITE)
-    DISPALYSURF.blit(Spaceship_RED_PNG, (365, 285))
+    DISPALYSURF.blit(SPACESHIP_RED_PNG, (red.x, red.y))
     pygame.display.update()
+
+#Spaceship sprite movement
+def red_movement(keys_pressed, red):
+    if keys_pressed[pygame.K_LEFT] and red.x - VELOCITY: # Go left;
+            red.x -= VELOCITY
+    if keys_pressed[pygame.K_RIGHT] and red.x + VELOCITY: # Go right
+            red.x += VELOCITY
+    if keys_pressed[pygame.K_UP]: # Go up
+            red.y -= VELOCITY
+    if keys_pressed[pygame.K_DOWN]: # Go down
+            red.y += VELOCITY
 
 # Main loop;
 def main():
+    red = pygame.Rect(375, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
+
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -35,7 +51,10 @@ def main():
             if event.type  == pygame.QUIT:
                 run = False
 
-        window_draw()
+        keys_pressed = pygame.key.get_pressed()
+        red_movement(keys_pressed, red)
+            
+        window_draw(red)
 
     pygame.quit()
 
