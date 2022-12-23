@@ -1,26 +1,27 @@
 import pygame
 
-class SpaceRocks:
+
+class Comets:
     def __init__(self):
-        self._init_pygame()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.win = pygame.display.set_mode((800, 600))
 
     def main_loop(self):
         while True:
-            self._handle_input()
-            self._process_game_logic()
-            self._draw()
+            self._input_()
+            self._logic_()
+            self._draw_()
 
-    def _init_pygame(self):
+    @staticmethod
+    def _init_pygame():
         pygame.init()
-        pygame.display.set_caption("Space Rocks")
+        pygame.display.set_caption("Comets")
 
-    def _handle_input(self):
+    def _input_(self):
         pass
 
-    def _process_game_logic(self):
+    def _logic_(self):
         pass
 
-    def _draw(self):
-        self.screen.fill((0, 0, 255))
+    def _draw_(self):
+        self.win.fill((0, 0, 255))
         pygame.display.flip()
