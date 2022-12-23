@@ -1,103 +1,101 @@
-# Imports 
-import pygame, os, math
+import pygame, os
 
-# Screen width and height;
-WIDTH, HEIGHT = 800, 600
-DISPALYSURF = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Comets")
+# Screen dimensions
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 
-# Colors;
+# Colors
 WHITE = (255, 255, 255)
 
-# Controls how fast the game will run;
+# Controls the frame rate of the game
 FPS = 60
 
 # Spaceship sprite
 SPACESHIP_WIDTH = 50
 SPACESHIP_HEIGHT = 50
+
+# Load the spaceship image and resize it
 SPACESHIP_RED_PNG = pygame.image.load(os.path.join("Assets", "SpaceShipRed_Comets.png"))
 SPACESHIP_RED_PNG = pygame.transform.scale(SPACESHIP_RED_PNG, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT))
 
-# Draws objects on the display;
-def window_draw(x, y):
-    DISPALYSURF.fill(WHITE)
-    DISPALYSURF.blit(SPACESHIP_RED_PNG, (x, y))
-    pygame.display.update()
 
-# Main loop;
+def blitRotate(surf, image, pos, originPos, angle):
+
+    # offset from pivot to center
+    image_rect = image.get_rect(topleft = (pos[0] - originPos[0], pos[1]-originPos[1]))
+    offset_center_to_pivot = pygame.math.Vector2(pos) - image_rect.center
+    
+    # roatated offset from pivot to center
+    rotated_offset = offset_center_to_pivot.rotate(-angle)
+
+    # roatetd image center
+    rotated_image_center = (pos[0] - rotated_offset.x, pos[1] - rotated_offset.y)
+
+    # get a rotated image
+    rotated_image = pygame.transform.rotate(image, angle)
+    rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
+
+    # rotate and blit the image
+    surf.blit(rotated_image, rotated_image_rect)
+  
+    # draw rectangle around the image
+    pygame.draw.rect(surf, (255, 0, 0), (*rotated_image_rect.topleft, *rotated_image.get_size()),2)
+
+def blitRotate2(surf, image, topleft, angle):
+
+    rotated_image = pygame.transform.rotate(image, angle)
+    new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
+
+    surf.blit(rotated_image, new_rect.topleft)
+    pygame.draw.rect(surf, (255, 0, 0), new_rect, 2)
+
+    image = pygame.image.load('Spaceship.png')
+
+
 def main():
+    """
+    The main game loop.
+    """
+    # Set the window caption
+    pygame.display.set_caption("Comets")
 
+    # Create the display surface
+    display_surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    # Create a clock to control the frame rate
     clock = pygame.time.Clock()
+
+    # Set up the main game loop
     run = True
+    angle = 0
     while run:
-        angle = 90
-        VELOCITY = 0
-
-        if angle == 360: angle = 0
-        if angle == -1: angle = 359
-
         clock.tick(FPS)
         for event in pygame.event.get():
-            if event.type  == pygame.QUIT:
+            if event.type == pygame.QUIT:
                 run = False
 
+        pos = (display_surface.get_width()/2, display_surface.get_height()/2)
+
+        # Update the spaceship's angle and velocity based on player input
         keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[pygame.K_LEFT]: # Go left;
-            angle += VELOCITY
-        if keys_pressed[pygame.K_RIGHT]: # Go right
-            angle -= VELOCITY
-        if keys_pressed[pygame.K_UP]: # Go up
-             VELOCITY += 2
-        if keys_pressed[pygame.K_DOWN]: # Go down
-             VELOCITY -= 1
+        if keys_pressed[pygame.K_LEFT]:  # Go left
+            spaceship.angle += spaceship.velocity
+        if keys_pressed[pygame.K_RIGHT]:  # Go right
+            spaceship.angle -= spaceship.velocity
+        if keys_pressed[pygame.K_UP]:  # Go up
+            spaceship.velocity += 1
+        if keys_pressed[pygame.K_DOWN]:  # Go down
+            spaceship.velocity -= 1
 
-        x = SPACESHIP_WIDTH
-        y = SPACESHIP_HEIGHT 
+       
+        # Clear the screen and draw all sprites
+        display_surface.fill(WHITE)
+        blitRotate(display_surface, Spa, pos, (w/2, h/2), angle)
+        angle += 1
 
-        x += VELOCITY*math.cos(math.radians(angle))
-        y -= VELOCITY*math.cos(math.radians(angle))
-        VELOCITY *= .90
+        # Update the display
+        pygame.display.update()
 
-        mid = x, y
-        SPACESHIP_ROT = pygame.transform.rotate(SPACESHIP_RED_PNG, angle)
-        position = SPACESHIP_ROT.get_rect(mid)
 
-        wrap_around = False
-        
-        
-        if position[0] <  0 :
-        # out screen left
-            position.move_ip(SPACESHIP_WIDTH, 0)
-            wrap_around = True
-
-        if position[0]  + SPACESHIP_ROT.get_width() > SPACESHIP_WIDTH:
-        # out screen right
-            position.move_ip(-SPACESHIP_WIDTH, 0)
-            wrap_around = True
-
-        if position[1]  < 0:
-        # out screen up
-            position.move_ip(0, SPACESHIP_HEIGHT) 
-            wrap_around = True
-
-        if position[1] + SPACESHIP_ROT.get_height() > SPACESHIP_HEIGHT:
-        # out screen down
-            position.move_ip(0, -SPACESHIP_HEIGHT) 
-            wrap_around = True
-
-        if wrap_around:
-
-            DISPALYSURF.blit(SPACESHIP_ROT, position)
-
-        position[0] %= WIDTH
-        position[1] %= HEIGHT  
-        WIDTH %= WIDTH
-        HEIGHT %= HEIGHT
-
-    window_draw(x, y)
-
-    pygame.quit()
-
-# Guarantees that the program only runs the main function if this file is read directly;
 if __name__ == "__main__":
     main()
