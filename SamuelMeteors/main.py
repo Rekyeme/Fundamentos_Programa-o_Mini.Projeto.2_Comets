@@ -1,22 +1,30 @@
 import pygame
 from pygame import *
-from entity import Entity
-from player import Player
+from entities.comet import CometManager
+from entities.entity import Entity
+from entities.player import Player
+from scene import Scene
 
 pygame.init()
-
-s_width = 800
-s_height = 600
-
-frame_surface = pygame.display.set_mode((s_width, s_height))
+frame_surface = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 fps_target = 60
 
-list_of_entities: list[Entity] = []
+# game scene
+list_of_entities_game_scene: list[Entity] = []
+back_ground = Entity(pygame.Vector2(0, 0), frame_surface, list_of_entities_game_scene, "assets/BG.jpg")
+back_ground.scale_img(0.75)
+player = Player(frame_surface, list_of_entities_game_scene)
+comet_manager = CometManager(frame_surface, list_of_entities_game_scene)
+game_scene = Scene(list_of_entities_game_scene, frame_surface)
 
-back_ground = Entity(pygame.Vector2(0,0), frame_surface, list_of_entities, "assets/BG.jpg")
-player = Player(frame_surface, list_of_entities, "assets/SpaceshipRed.png")
+# menu scene
+list_of_entities_menu_scene: list[Entity] = []
+test_obj = Entity(pygame.Vector2(300, 300), frame_surface, list_of_entities_menu_scene, "assets/comet.png")
+menu_scene = Scene(list_of_entities_menu_scene, frame_surface)
 
+# GAME LOOP
+current_scene = game_scene
 running = True
 while running:
 
@@ -28,27 +36,20 @@ while running:
             if event.key == K_ESCAPE:
                 running = False
             if event.key == K_p:
-                print(len(list_of_entities))
+                print(len(list_of_entities_game_scene))
+            if event.key == K_q:
+                current_scene = menu_scene
+            if event.key == K_e:
+                current_scene = game_scene
         elif event.type == QUIT:
             running = False
 
-    # clears frame
-    frame_surface.fill(pygame.Color("blue"))
-
-    # UPDATE
-    for entity in list_of_entities:
-        entity.update()
-
-    for entity in list_of_entities:
-        entity.wrap_around()
-
-    # RENDER
-    for entity in list_of_entities:
-        entity.render()
-
-    # RENDER GIZMOS
-    for entity in list_of_entities:
-        entity.render_gizmos()
+    #if CometManager.GameOver:
+        #continue
+    current_scene.update_scene()
+    current_scene.wrap_around_scene()
+    current_scene.render_scene()
+    current_scene.render_gizmos_scene()
 
     # frame update
     pygame.display.update()
