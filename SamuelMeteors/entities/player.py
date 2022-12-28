@@ -5,13 +5,12 @@ import math
 
 from entities.bullet import Bullet
 from entities.entity import Entity
-from rect_trigger import RectTrigger
-from timer import Timer
+from utilities.rect_trigger import RectTrigger
+from utilities.timer import Timer
 
 
 class Player(Entity):
 
-    Score = 0
     Rect_Trigger = RectTrigger(Vector2(0, 0), 0, 0)
 
     def __init__(self, frame_surface, list_of_entities: list):

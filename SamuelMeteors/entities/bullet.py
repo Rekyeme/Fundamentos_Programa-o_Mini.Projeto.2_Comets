@@ -1,6 +1,6 @@
 import pygame.transform
 from entities.entity import Entity
-from timer import Timer
+from utilities.timer import Timer
 
 
 class Bullet(Entity):

@@ -9,6 +9,10 @@ class Scene:
         self.list_of_entities: list[Entity] = list_of_entities
         self.frame_surface = frame_surface
 
+    def start_scene(self):
+        for entity in self.list_of_entities:
+            entity.start()
+
     def update_scene(self):
         for entity in self.list_of_entities:
             entity.update()

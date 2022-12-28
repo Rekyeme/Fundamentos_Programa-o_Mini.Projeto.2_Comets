@@ -1,7 +1,7 @@
 import pygame
 
 class Timer:
-    # can execute a function oce the timer is over
+    # can execute a function oce the exit_timer is over
     def __init__(self, duration_in_ms):
         self.__duration_in_ms = duration_in_ms
         self.__start_time = 0

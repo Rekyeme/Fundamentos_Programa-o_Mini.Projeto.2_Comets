@@ -2,10 +2,15 @@ import enum
 import pygame
 import math
 import random
-from circle_trigger import CircleTrigger
+from utilities.circle_trigger import CircleTrigger
 from entities.bullet import Bullet
 from entities.entity import Entity
 from entities.player import Player
+from utilities.timer import Timer
+
+
+# ======================================================================================================================
+# ======================================================================================================================
 
 
 class Rank(enum.Enum):
@@ -14,23 +19,80 @@ class Rank(enum.Enum):
     Small = 3
 
 
+# ======================================================================================================================
+# ======================================================================================================================
+
+
 class CometManager(Entity):
 
-    Instantiated_Comets = []
     GameOver = False
+    Instantiated_Comets = []
+    Score = 0
 
-    def __init__(self, frame_surface, list_of_entities: list):
-        super().__init__(pygame.Vector2(0, 0), frame_surface, list_of_entities)
-        self.__instantiate_big_comet_at_random_position()
+    def __init__(self, go_to_game_over_func, frame_surface, list_of_entities: list):
+        super().__init__(pygame.Vector2(400, 15), frame_surface, list_of_entities)
 
-    def __instantiate_big_comet_at_random_position(self):
-        Comet(Rank.Big, pygame.Vector2(random.randint(1, 800-1), random.randint(1, 600-1)),
-                      self.frame_surface, self.list_of_entities)
+        # got to game over func is used to set the score at the score sheet
+        self.go_to_game_over_func = go_to_game_over_func
+
+        self.text = f"score: {self.Score}"
+        self.font_size = 25
+        self.text_color = pygame.Color("white")
+        self.font = pygame.font.Font('freesansbold.ttf', self.font_size)
+        self.text_surf = self.font.render(self.text, True, self.text_color)
+        self.image = pygame.Surface((200, 30))
+        self.image_rect = self.image.get_rect(center=self.position)
+        self.image.blit(self.text_surf, (0, 0))
+
+        self.last_score = 0
+
+        # limpa a cena por 1 segundo. saí libera os meteoros para serem instanciados
+        self.timer = Timer(1*1000)
+
+    def start(self):
+        CometManager.Score = 0
+        self.update_score_text()
+        CometManager.GameOver = False
+        self.try_to_clean_up_scene_from_comets()
+        self.timer.activate()
+        self.timer.timer_update()
 
     def update(self):
+
+        if CometManager.GameOver:
+            self.go_to_game_over_func()
+
+        self.timer.timer_update()
+        if self.timer.is_timer_active_read_only:
+            self.try_to_clean_up_scene_from_comets()
+            return
+
         # make a new big comet whenever there is less than 2 comets on screen
         if len(CometManager.Instantiated_Comets) < 2:
             self.__instantiate_big_comet_at_random_position()
+        if self.last_score != CometManager.Score:
+            self.update_score_text()
+            self.last_score = CometManager.Score
+
+    def try_to_clean_up_scene_from_comets(self):
+        for comet in CometManager.Instantiated_Comets:
+            comet.destroy()
+        for comet in self.list_of_entities:
+            if isinstance(comet, Comet):
+                comet.destroy()
+
+    def __instantiate_big_comet_at_random_position(self):
+        Comet(Rank.Big, pygame.Vector2(random.randint(1, 800-1), random.randint(1, 600-1)), self.frame_surface, self.list_of_entities)
+
+    def update_score_text(self):
+        self.text = f"score: {self.Score}"
+        self.text_surf = self.font.render(self.text, True, self.text_color)
+        self.image.fill(color=pygame.Color("black"))
+        self.image.blit(self.text_surf, (0, 0))
+
+
+# ======================================================================================================================
+# ======================================================================================================================
 
 
 class Comet(Entity):
@@ -89,18 +151,15 @@ class Comet(Entity):
                 bullet.destroy()
                 self.destroy()
                 if self.rank == Rank.Big:
-                    Player.Score += 3
+                    CometManager.Score += 3
                     for i in range(0, 3):
                         Comet(Rank.Mid, self.position.copy(), self.frame_surface, self.list_of_entities)
                 elif self.rank == Rank.Mid:
-                    Player.Score += 6
+                    CometManager.Score += 6
                     for i in range(0, 5):
                         Comet(Rank.Small, self.position.copy(), self.frame_surface, self.list_of_entities)
                 elif self.rank == Rank.Small:
-                    Player.Score += 12
-
-        # player score debugging
-        print(f"score: {Player.Score}")
+                    CometManager.Score += 12
 
         # move
         self.position += self.direction * self.move_speed
