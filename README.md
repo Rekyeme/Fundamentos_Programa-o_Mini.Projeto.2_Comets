@@ -21,6 +21,8 @@ This project was started like many others, by setting the game window and creati
         self.fps_target = 60
 
 
+        
+        
         def run(self):
 
         if self.__current_scene is None:
