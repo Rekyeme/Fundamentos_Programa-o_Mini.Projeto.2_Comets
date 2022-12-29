@@ -11,7 +11,7 @@ Since i worked in this project alone, it can be said that i was the one who have
 ### Starting of the project
 This project was started like many others, by setting the game window and creating the main loop of the game.
 
-
+'
 
     def __init__(self):
         pygame.init()
@@ -20,8 +20,8 @@ This project was started like many others, by setting the game window and creati
         self.clock = pygame.time.Clock()
         self.fps_target = 60
 
-
-        
+'
+'        
         
         def run(self):
 
@@ -50,3 +50,4 @@ This project was started like many others, by setting the game window and creati
             # frame update
             pygame.display.update()
 
+'
