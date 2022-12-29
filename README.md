@@ -258,10 +258,29 @@ class Comet(Entity):
                     elif self.rank == Rank.Small:
                         CometManager.Score += 12
                         
-## The start screen is composed of the game background, a background exclusive to the scene and buttons to navigate.
+## The start screen:
+It has the game background, a costum interface with functional buttons.
 
 ![image](https://user-images.githubusercontent.com/115167862/210021268-05f80bb9-7304-4530-9ee6-ca94bd49315f.png)
 
+## The game over screen:
+This scene is just a screen with " Game Over" written on it to tell the player that he has died.
 
+![image](https://user-images.githubusercontent.com/115167862/210021382-586101d8-aff4-4a16-b96c-d8cad9eb377e.png)
+
+## The Scoreboard:
+This shows the score of the people who played the game.
+
+![image](https://user-images.githubusercontent.com/115167862/210021629-c6255d8f-a0bc-4b56-840f-850eff7bffad.png)
+
+## Register the score:
+Finally, this is the screen that appears when a player does a new record on the game.
+
+![image](https://user-images.githubusercontent.com/115167862/210021711-d845ea67-6596-4ab7-992a-8f63edbd28c0.png)
+
+# References and mentions:
+The creation of this project was very complicated, because i had to work on my own ann also i'm not a great prgrammer(for now, i hope).
+With this said, i had to ask my collegues and friends to help me with this project. The ones who i had asked for help in this project were João Neto and Daniel Dantas, when i asked help with something they always helped. 
+I have to give a special thanks to João Neto, because i have used scripts from his own engine and finally but the most important to thank the teacher Phil Lopes for extending the delivery date to finish this work.
 
     
