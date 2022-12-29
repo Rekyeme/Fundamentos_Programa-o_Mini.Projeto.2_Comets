@@ -49,12 +49,12 @@ This project was started like many others, by setting the game window and creati
             # frame update
             pygame.display.update()
 
-'
+#
 
 ### Creation of the player
 After setting the main loop and the background, the next thing that was done was the creation of the player and it's statistics like movement, acceleration and etc.
 
-'
+#
 
         # move
         self.max_move_speed = 2.5
@@ -69,4 +69,4 @@ After setting the main loop and the background, the next thing that was done was
         # direction
         self.move_direction = Vector2(0, 0)
         
-'
+#
