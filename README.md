@@ -11,7 +11,7 @@ Since i worked in this project alone, it can be said that i was the one who have
 ### Starting of the project
 This project was started like many others, by setting the game window and creating the main loop of the game.
 
-#
+# Setting the window size
 
     def __init__(self):
         pygame.init()
@@ -20,7 +20,7 @@ This project was started like many others, by setting the game window and creati
         self.clock = pygame.time.Clock()
         self.fps_target = 60
 
-#       
+# Game Main Loop      
         
         def run(self):
 
@@ -40,6 +40,11 @@ This project was started like many others, by setting the game window and creati
                         self.go_to_menu_scene()
                 elif event.type == QUIT:
                     running = False
+                    
+            self.__current_scene.update_scene()
+            self.__current_scene.wrap_around_scene()
+            self.__current_scene.render_scene()
+            #self.__current_scene.render_gizmos_scene()
 
             # frame update
             pygame.display.update()
@@ -49,7 +54,7 @@ This project was started like many others, by setting the game window and creati
 ### Creation of the player
 After setting the main loop and the background, the next thing that was done was the creation of the player and it's statistics like movement, acceleration and etc.
 
-#
+# Parameters for each actions
 
         # move
         self.max_move_speed = 2.5
