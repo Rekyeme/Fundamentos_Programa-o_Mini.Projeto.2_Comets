@@ -20,7 +20,7 @@ This project was started like many others, by setting the game window and creati
         self.clock = pygame.time.Clock()
         self.fps_target = 60
         
-
+'
         def run(self):
 
         if self.__current_scene is None:
@@ -50,3 +50,4 @@ This project was started like many others, by setting the game window and creati
 
 
 GameLoop().run()
+'
