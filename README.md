@@ -130,3 +130,57 @@ Inside the player was also set the shoot option.
             incremento = self.move_direction * self.current_move_speed
             new_position = self.position + incremento
             self.position = new_position
+
+## Creation of the bullet:
+Like it's possible to observe in the previous code samples there is a shoot function, that will be used to interact with the comets later on. At the time the focus was to define the bullet parameters and for it to be shot from the player and travel throught scene.
+
+### The bullet class -
+
+        class Bullet(Entity):
+
+            Instantiated_Bullets = []
+
+            def __init__(self, initial_position, angle, direction, frame_surface, list_of_entities: list, img_path):
+                super().__init__(initial_position, frame_surface, list_of_entities, img_path)
+
+                Bullet.Instantiated_Bullets.append(self)
+
+                self.scale_img(0.03)
+                self.angle = angle
+                self.direction = direction
+                self.bullet_speed = 4
+                self.image = pygame.transform.rotate(self.image, angle)
+
+                self.life_time_timer = Timer(4*1000)
+                self.life_time_timer.activate()
+
+            def update(self):
+                self.position += self.direction * self.bullet_speed
+                self.life_time_timer.timer_update()
+                if not self.life_time_timer.is_timer_active_read_only:
+                    self.destroy()
+
+            def destroy(self):
+                super(Bullet, self).destroy()
+                Bullet.Instantiated_Bullets.remove(self)
+                
+## Wrap Around:
+After creating and setting the scenario, the player and the bullet, it was time to create the wrap around function. A function in which allows the player and the game objects like the bullet or the comets to appear in the opposite side of the map after exceeding the limits of the himself. Every object as a connection to this function.
+
+            def wrap_around(self):
+                if self.image is None:
+                    return
+                # x
+                if self.position.x > self.frame_surface.get_width() + self.image.get_width()/2:
+                    self.position.x = 0
+                elif self.position.x + self.image.get_width()/2 < 0:
+                    self.position.x = self.frame_surface.get_width()
+                # y
+                if self.position.y > self.frame_surface.get_height() + self.image.get_height() / 2:
+                    self.position.y = 0
+                elif self.position.y + self.image.get_height()/2 < 0:
+                    self.position.y = self.frame_surface.get_height()
+                    
+## Creation of the comets and the interactions with the other objects:
+
+
