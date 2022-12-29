@@ -11,7 +11,7 @@ Since i worked in this project alone, it can be said that i was the one who have
 ### Starting of the project
 This project was started like many others, by setting the game window and creating the main loop of the game.
 
-# Setting the window size
+#### Setting the window size
 
     def __init__(self):
         pygame.init()
