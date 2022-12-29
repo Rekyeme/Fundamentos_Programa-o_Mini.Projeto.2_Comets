@@ -41,11 +41,6 @@ This project was started like many others, by setting the game window and creati
                 elif event.type == QUIT:
                     running = False
 
-            self.__current_scene.update_scene()
-            self.__current_scene.wrap_around_scene()
-            self.__current_scene.render_scene()
-            #self.__current_scene.render_gizmos_scene()
-
             # frame update
             pygame.display.update()
 
