@@ -21,3 +21,32 @@ This project was started like many others, by setting the game window and creati
         self.fps_target = 60
         
 
+        def run(self):
+
+        if self.__current_scene is None:
+            self.go_to_menu_scene()
+        running = True
+
+        while running:
+            self.clock.tick(self.fps_target)
+            pygame.display.set_caption(f"FPS: {self.clock.get_fps():.2f}")
+
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_p:
+                        print(len(self.__current_scene.list_of_entities))
+                    if event.key == K_ESCAPE:
+                        self.go_to_menu_scene()
+                elif event.type == QUIT:
+                    running = False
+
+            self.__current_scene.update_scene()
+            self.__current_scene.wrap_around_scene()
+            self.__current_scene.render_scene()
+            #self.__current_scene.render_gizmos_scene()
+
+            # frame update
+            pygame.display.update()
+
+
+GameLoop().run()
